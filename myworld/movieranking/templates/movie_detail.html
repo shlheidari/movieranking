@@ -1,0 +1,40 @@
+<!-- templates/movie_details.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ movie.title }}</title>
+</head>
+<body>
+    <form method="get" action="{% url 'index' %}">
+        <input type="text" name="q" placeholder="Search by name, genre, or year">
+        <button type="submit">Search</button>
+    </form>
+    <h1>{{ movie.title }}</h1>
+    <p>{{ movie.description }}</p>
+    <p>Release Year: {{ movie.release_year }}</p>
+    <p>Genre: {{ movie.genre }}</p>
+    <p>Duration: {{ movie.duration }} min</p>
+    <p><a href="{{ movie.download_link }}">Download Link</a></p>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment.user.username }}: {{ comment.text }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <h2>Add a comment</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Post Comment</button>
+        </form>
+        <br>
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to post a comment.</p>
+    {% endif %}
+</body>
+</html>
