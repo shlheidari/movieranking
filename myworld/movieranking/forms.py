@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment
+from .models import Comment, CustomUser
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 
@@ -15,6 +15,14 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
+        
+class CustomUserCreationForm(UserCreationForm):
+    security_question = forms.CharField(max_length=255, required=True)
+    security_answer = forms.CharField(max_length=255, required=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'security_question', 'security_answer', 'password1', 'password2')
         
         
 # class ForgotPasswordForm(forms.Form):

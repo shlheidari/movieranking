@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Movie, Comment
-from .forms import CommentForm, SignUpForm
+from .forms import CommentForm, SignUpForm, CustomUserCreationForm
 # from .forms import ForgotPasswordForm, PasswordResetForm, SecurityQuestionForm
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate, logout 
-from django.conf import settings
 
+
+User = get_user_model()
 
 def index(request):
     query = request.GET.get('q')
@@ -40,21 +44,51 @@ def movie_detail(request, movie_id):
 
 def signup(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('index')
+            return redirect('login')
     else:
-        form = SignUpForm()
+        form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
 
 def user_logout(request):
     logout(request)
     return redirect('index')
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        security_answer = request.POST['security_answer']
+        try:
+            user = User.objects.get(username=username, security_answer=security_answer)
+            request.session['reset_user_id'] = user.id
+            return redirect('reset_password')
+        except ObjectDoesNotExist:
+            messages.error(request, 'Invalid username or security answer')
+    return render(request, 'registration/forgot_password.html')
+
+def reset_password(request):
+    if 'reset_user_id' not in request.session:
+        return redirect('forgot_password')
+
+    if request.method == 'POST':
+        new_password = request.POST['new_password']
+        user_id = request.session['reset_user_id']
+        user = User.objects.get(id=user_id)
+        user.set_password(new_password)
+        user.save()
+        del request.session['reset_user_id']
+        messages.success(request, 'Password reset successfully')
+        return redirect('login')
+
+    return render(request, 'registration/reset_password.html')
 
 # def forgot_password(request):
 #     if request.method == 'POST':
