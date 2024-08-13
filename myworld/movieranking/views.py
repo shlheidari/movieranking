@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Movie, Comment
-from .forms import CommentForm, SignUpForm, CustomUserCreationForm
+from .forms import CommentForm, SignUpForm, CustomUserCreationForm, MovieDisplayForm
 # from .forms import ForgotPasswordForm, PasswordResetForm, SecurityQuestionForm
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,6 +20,16 @@ def index(request):
                  Movie.objects.filter(release_year__icontains=query)
     else:
         movies = Movie.objects.all()
+    # Default number of movies to display
+    num_movies = 5
+    if request.method == 'POST':
+        form = MovieDisplayForm(request.POST)
+        if form.is_valid():
+            num_movies = int(form.cleaned_data['num_movies'])
+    else:
+        form = MovieDisplayForm()
+    
+    movies = movies[:num_movies]
     return render(request, 'index.html', {'movies': movies})
 
 def movie_detail(request, movie_id):

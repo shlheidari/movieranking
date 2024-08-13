@@ -23,7 +23,16 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'security_question', 'security_answer', 'password1', 'password2')
-        
+ 
+MOVIE_DISPLAY_CHOICES = [
+    (5, '5'),
+    (10, '10'),
+    (20, '20'),
+    (50, '50'),
+]
+
+class MovieDisplayForm(forms.Form):
+    num_movies = forms.ChoiceField(choices=MOVIE_DISPLAY_CHOICES, label='Number of movies to display')
         
 # class ForgotPasswordForm(forms.Form):
 #     email = forms.EmailField(label='Email', required=True)
