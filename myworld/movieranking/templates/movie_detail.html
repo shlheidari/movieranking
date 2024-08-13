@@ -24,6 +24,7 @@
         {% endfor %}
     </ul>
 
+
     {% if user.is_authenticated %}
         <h2>Add a comment</h2>
         <form method="post">
@@ -36,5 +37,8 @@
     {% else %}
         <p><a href="{% url 'login' %}">Login</a> to post a comment.</p>
     {% endif %}
+    
+        <br>
+        <a href="{% url 'index' %}">Main page</a>
 </body>
 </html>

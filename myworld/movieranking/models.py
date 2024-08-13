@@ -21,6 +21,6 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.movie.title}"
 
-class CustomUser(AbstractUser):
-    security_question = models.CharField(max_length=255)
-    security_answer = models.CharField(max_length=255)
+# class CustomUser(AbstractUser):
+#     security_question = models.CharField(max_length=255)
+#     security_answer = models.CharField(max_length=255)
