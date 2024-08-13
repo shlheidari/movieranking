@@ -9,6 +9,7 @@ class Movie(models.Model):
     description = models.TextField()
     release_year = models.IntegerField()
     download_link = models.URLField()
+    image = models.ImageField(upload_to='movies/')
 
     def __str__(self):
         return self.title
