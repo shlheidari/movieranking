@@ -20,17 +20,17 @@ def index(request):
                  Movie.objects.filter(release_year__icontains=query)
     else:
         movies = Movie.objects.all()
-    # Default number of movies to display
-    num_movies = 5
-    if request.method == 'POST':
-        form = MovieDisplayForm(request.POST)
-        if form.is_valid():
-            num_movies = int(form.cleaned_data['num_movies'])
-    else:
-        form = MovieDisplayForm()
-    
+        
+
+    num_movies = int(request.GET.get('num_movies', 5))    
     movies = movies[:num_movies]
-    return render(request, 'index.html', {'movies': movies})
+    
+    context = {
+        'movies': movies,
+        'num_movies': num_movies,
+    }
+    
+    return render(request, 'index.html', context)
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
