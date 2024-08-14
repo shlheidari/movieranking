@@ -11,14 +11,13 @@
         <button type="submit">Search</button>
     </form>
     
-    <!-- Form to choose the number of movies to display -->
-    <form method="get" action="">
-        <label for="num_movies">Show:</label>
-        <select name="num_movies" id="num_movies" onchange="this.form.submit()">
-            <option value="5" {% if num_movies == 5 %}selected{% endif %}>5</option>
-            <option value="10" {% if num_movies == 10 %}selected{% endif %}>10</option>
-            <option value="20" {% if num_movies == 20 %}selected{% endif %}>20</option>
-            <option value="50" {% if num_movies == 50 %}selected{% endif %}>50</option>
+    <form method="get" action=".">
+        <label for="movies_per_page">Movies per page:</label>
+        <select name="movies_per_page" id="movies_per_page" onchange="this.form.submit()">
+            <option value="5" {% if movies_per_page == 5 %}selected{% endif %}>5</option>
+            <option value="10" {% if movies_per_page == 10 %}selected{% endif %}>10</option>
+            <option value="20" {% if movies_per_page == 20 %}selected{% endif %}>20</option>
+            <option value="50" {% if movies_per_page == 50 %}selected{% endif %}>50</option>
         </select>
     </form>
 
@@ -30,6 +29,24 @@
             <img src="{{ movie.image.url }}" alt="{{ movie.title }}" width="100">
         {% endfor %}
     </ul>
+    
+    <div class="pagination">
+        <span class="step-links">
+            {% if movies.has_previous %}
+                <a href="?page=1&movies_per_page={{ movies_per_page }}">&laquo; first</a>
+                <a href="?page={{ movies.previous_page_number }}&movies_per_page={{ movies_per_page }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ movies.number }} of {{ movies.paginator.num_pages }}.
+            </span>
+
+            {% if movies.has_next %}
+                <a href="?page={{ movies.next_page_number }}&movies_per_page={{ movies_per_page }}">next</a>
+                <a href="?page={{ movies.paginator.num_pages }}&movies_per_page={{ movies_per_page }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
     
     {% if user.is_authenticated %}
         <a href="{% url 'logout' %}">Logout</a>

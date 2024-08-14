@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 
 
 User = get_user_model()
@@ -15,20 +16,24 @@ User = get_user_model()
 def index(request):
     query = request.GET.get('q')
     if query:
-        movies = Movie.objects.filter(title__icontains=query) | \
+        all_movies = Movie.objects.filter(title__icontains=query) | \
                  Movie.objects.filter(genre__icontains=query) | \
                  Movie.objects.filter(release_year__icontains=query)
     else:
-        movies = Movie.objects.all()
+        all_movies = Movie.objects.all()
         
 
-    num_movies = int(request.GET.get('num_movies', 5))    
-    movies = movies[:num_movies]
+    movies_per_page = request.GET.get('movies_per_page', 10)
+    page_number = request.GET.get('page', 1)
+    
+    paginator = Paginator(all_movies, movies_per_page)
+    movies = paginator.get_page(page_number)
     
     context = {
         'movies': movies,
-        'num_movies': num_movies,
+        'movies_per_page': int(movies_per_page)
     }
+
     
     return render(request, 'index.html', context)
 
