@@ -4,6 +4,172 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie List</title>
+    
+<style>
+
+body, h1, h2, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid #ff6f61;
+}
+
+header form {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+header input[type="text"] {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}
+
+header button {
+    padding: 5px 10px;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+header button:hover {
+    background-color: #ff5c4d;
+}
+
+header select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+header a {
+    color: #ff6f61;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+header a:hover {
+    color: #ff5c4d;
+}
+
+main {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2em;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 0;
+}
+
+ul li {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center; /* Ensure the text is centered */
+    width: 200px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+
+ul li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+ul li img {
+    border-radius: 4px;
+    margin-bottom: 10px; /* Add space between the image and the title */
+}
+
+ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: block; /* Make sure the title appears as a block element */
+    margin-top: 5px;
+}  font-weight: bold;
+
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination .step-links a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.pagination .step-links a:hover {
+    background-color: #555;
+}
+
+.pagination .current {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #ff6f61;
+    color: white;
+    border-radius: 4px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 3px solid #ff6f61;
+}
+
+footer h2 {
+    margin-bottom: 10px;
+}
+
+footer p {
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+  
+</style>
+
 </head>
 <body>
 
@@ -37,15 +203,16 @@
 <main>
     <h1>Movie List</h1>
     <ul>
-        {% for movie in movies %}
-            
-          <a href="{% url 'movie_detail' movie.id %}">
-                <img src="{{ movie.image.url }}" alt="{{ movie.title }}" width="100">
-           <br>
-            <li><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a></li>
-            
-        {% endfor %}
-    </ul>
+    {% for movie in movies %}
+    <li>
+        <a href="{% url 'movie_detail' movie.id %}">
+            <img src="{{ movie.image.url }}" alt="{{ movie.title }}" width="100">
+        </a>
+        <br>
+        <a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
     
     <div class="pagination">
         <span class="step-links">
